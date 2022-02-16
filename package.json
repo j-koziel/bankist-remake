@@ -2,7 +2,6 @@
   "name": "bankist-remake",
   "version": "1.0.0",
   "description": "Remake of bankist application",
-  "main": "index.js",
   "scripts": {
     "start": "parcel ./src/index.html",
     "build": "parcel build ./src/index.html --dist-dir dist"
