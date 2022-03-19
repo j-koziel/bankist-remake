@@ -54,3 +54,26 @@ const inputTransferAmount = document.querySelector('.form__input--amount');
 const inputLoanAmount = document.querySelector('.form__input--loan-amount');
 const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
+
+accounts.forEach(acc => {
+  const username = acc.owner
+    .toLowerCase()
+    .split(' ')
+    .map(name => name.slice(0, 1))
+    .join('');
+  acc.username = username;
+});
+
+console.log(accounts[0].username);
+
+btnLogin.addEventListener('click', e => {
+  e.preventDefault();
+  const accountUser = inputLoginUsername?.value;
+  const accountPin = Number(inputLoginPin?.value);
+  accounts.forEach(acc => {
+    if (acc.pin === accountPin) {
+      console.log('Correct pin.');
+      containerApp.style.opacity = 100;
+    } else console.log(inputLoginPin.value);
+  });
+});
