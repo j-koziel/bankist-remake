@@ -64,16 +64,45 @@ accounts.forEach(acc => {
   acc.username = username;
 });
 
-console.log(accounts[0].username);
+console.log(account2.username);
+
+console.log(accounts[1].username);
+
+let currentAccount;
 
 btnLogin.addEventListener('click', e => {
   e.preventDefault();
-  const accountUser = inputLoginUsername?.value;
-  const accountPin = Number(inputLoginPin?.value);
-  accounts.forEach(acc => {
-    if (acc.pin === accountPin) {
-      console.log('Correct pin.');
-      containerApp.style.opacity = 100;
-    } else console.log(inputLoginPin.value);
-  });
+  // What i tried to do
+  // const accountUser = inputLoginUsername?.value;
+  // const accountPin = Number(inputLoginPin?.value);
+  // for (acc of accounts) {
+  //   console.log(acc.username);
+
+  //   if (acc.username === accountUser && acc.pin === accountPin) {
+  //     console.log('Correct pin and user');
+  //     containerApp.style.opacity = 100;
+  //     break;
+  //   } else {
+  //     console.log('Wrong username or password');
+  //     continue;
+  //   }
+  // }
+
+  // What i should have done
+  currentAccount = accounts.find(
+    acc => acc.username === inputLoginUsername.value
+  );
+
+  if (currentAccount?.pin === Number(inputLoginPin.value)) {
+    // Display message and UI
+    labelWelcome.textContent = `Welcome back, ${
+      currentAccount.owner.split(' ')[0]
+    }`;
+
+    containerApp.style.opacity = 100;
+
+    // clear input fields
+    inputLoginPin.value = inputLoginUsername.value = '';
+    inputLoginPin.blur();
+  }
 });
