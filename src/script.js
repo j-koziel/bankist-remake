@@ -105,4 +105,14 @@ btnLogin.addEventListener('click', e => {
     inputLoginPin.value = inputLoginUsername.value = '';
     inputLoginPin.blur();
   }
+
+  labelBalance.textContent = `${currentBalance()}€`;
 });
+
+const currentBalance = function () {
+  const currentBalance = currentAccount.movements.reduce(
+    (prev, cur) => prev + cur,
+    0
+  );
+  return currentBalance;
+};
