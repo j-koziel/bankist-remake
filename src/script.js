@@ -106,13 +106,31 @@ btnLogin.addEventListener('click', e => {
     inputLoginPin.blur();
   }
 
-  labelBalance.textContent = `${currentBalance()}€`;
+  labelBalance.textContent = `${displayBalance()}€`;
+
+  displayMovements(currentAccount.movements);
 });
 
-const currentBalance = function () {
+const displayBalance = function () {
   const currentBalance = currentAccount.movements.reduce(
     (prev, cur) => prev + cur,
     0
   );
   return currentBalance;
+};
+
+// Creating movements rows
+const displayMovements = function (allMovements) {
+  movementsArr = [];
+  allMovements.forEach((mov, i) => {
+    movementsArr.push(`<div class="movements__row">
+          <div class="movements__type movements__type--${
+            mov > 0 ? 'deposit' : 'withdrawal'
+          }">${i + 1} ${mov > 0 ? 'Deposit' : 'Withdrawal'}</div>
+          <div class="movements__date">3 days ago</div>
+          <div class="movements__value">${mov}€</div>
+        </div>`);
+  });
+  movementsHTML = movementsArr.reverse().join('');
+  containerMovements.innerHTML = movementsHTML;
 };
