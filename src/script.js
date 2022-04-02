@@ -1,6 +1,7 @@
 // Data
 const account1 = {
   owner: 'Jonas Schmedtmann',
+  username: 'js',
   movements: [200, 450, -400, 3000, -650, -130, 70, 1300],
   interestRate: 1.2, // %
   pin: 1111,
@@ -8,6 +9,7 @@ const account1 = {
 
 const account2 = {
   owner: 'Jessica Davis',
+  username: 'jd',
   movements: [5000, 3400, -150, -790, -3210, -1000, 8500, -30],
   interestRate: 1.5,
   pin: 2222,
@@ -15,6 +17,7 @@ const account2 = {
 
 const account3 = {
   owner: 'Steven Thomas Williams',
+  username: 'stw',
   movements: [200, -200, 340, -300, -20, 50, 400, -460],
   interestRate: 0.7,
   pin: 3333,
@@ -22,6 +25,7 @@ const account3 = {
 
 const account4 = {
   owner: 'Sarah Smith',
+  username: 'ss',
   movements: [430, 1000, 700, 50, 90],
   interestRate: 1,
   pin: 4444,
@@ -55,21 +59,50 @@ const inputLoanAmount = document.querySelector('.form__input--loan-amount');
 const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
 
-accounts.forEach(acc => {
-  const username = acc.owner
-    .toLowerCase()
-    .split(' ')
-    .map(name => name.slice(0, 1))
-    .join('');
-  acc.username = username;
-});
-
 console.log(account2.username);
 
 console.log(accounts[1].username);
 
-let currentAccount;
+// Functions
+const calcBalance = function (movements) {
+  const currentBalance = movements.reduce((prev, cur) => prev + cur, 0);
+  return currentBalance;
+};
 
+// Creating movements rows
+const displayMovements = function (allMovements) {
+  movementsArr = [];
+  allMovements.forEach((mov, i) => {
+    movementsArr.push(`<div class="movements__row">
+          <div class="movements__type movements__type--${
+            mov > 0 ? 'deposit' : 'withdrawal'
+          }">${i + 1} ${mov > 0 ? 'Deposit' : 'Withdrawal'}</div>
+          <div class="movements__date">3 days ago</div>
+          <div class="movements__value">${mov}€</div>
+        </div>`);
+  });
+  movementsHTML = movementsArr.reverse().join('');
+  containerMovements.innerHTML = movementsHTML;
+};
+
+const displaySums = function (movements, interestRate, balance) {
+  const sumOut = Math.abs(
+    movements.filter(mov => mov < 0).reduce((prev, cur) => prev + cur)
+  );
+  const sumIn = movements
+    .filter(mov => mov > 0)
+    .reduce((prev, cur) => prev + cur);
+
+  const interest = balance * (interestRate / 100);
+  labelSumIn.textContent = `${sumIn}€`;
+  labelSumOut.textContent = `${sumOut}€`;
+  labelSumInterest.textContent = `${interest}€`;
+};
+
+let currentAccount;
+let balance;
+
+// Event Handlers
 btnLogin.addEventListener('click', e => {
   e.preventDefault();
   // What i tried to do
@@ -106,7 +139,7 @@ btnLogin.addEventListener('click', e => {
     inputLoginPin.blur();
   }
 
-  let balance = displayBalance(currentAccount.movements);
+  balance = calcBalance(currentAccount.movements);
   labelBalance.textContent = `${balance}€`;
 
   displayMovements(currentAccount.movements);
@@ -114,37 +147,21 @@ btnLogin.addEventListener('click', e => {
   displaySums(currentAccount.movements, currentAccount.interestRate, balance);
 });
 
-const displayBalance = function (movements) {
-  const currentBalance = movements.reduce((prev, cur) => prev + cur, 0);
-  return currentBalance;
-};
+btnTransfer.addEventListener('click', e => {
+  e.preventDefault();
 
-// Creating movements rows
-const displayMovements = function (allMovements) {
-  movementsArr = [];
-  allMovements.forEach((mov, i) => {
-    movementsArr.push(`<div class="movements__row">
-          <div class="movements__type movements__type--${
-            mov > 0 ? 'deposit' : 'withdrawal'
-          }">${i + 1} ${mov > 0 ? 'Deposit' : 'Withdrawal'}</div>
-          <div class="movements__date">3 days ago</div>
-          <div class="movements__value">${mov}€</div>
-        </div>`);
-  });
-  movementsHTML = movementsArr.reverse().join('');
-  containerMovements.innerHTML = movementsHTML;
-};
-
-const displaySums = function (movements, interestRate, balance) {
-  const sumOut = Math.abs(
-    movements.filter(mov => mov < 0).reduce((prev, cur) => prev + cur)
+  const receivingAcc = accounts.find(
+    acc => acc.username === inputTransferTo.value
   );
-  const sumIn = movements
-    .filter(mov => mov > 0)
-    .reduce((prev, cur) => prev + cur);
+  const transferAmount = Number(inputTransferAmount.value);
 
-  const interest = balance * (interestRate / 100);
-  labelSumIn.textContent = `${sumIn}€`;
-  labelSumOut.textContent = `${sumOut}€`;
-  labelSumInterest.textContent = `${interest}€`;
-};
+  currentAccount.movements.push(-transferAmount);
+  receivingAcc.movements.push(transferAmount);
+  balance = calcBalance(currentAccount.movements);
+
+  displayMovements(currentAccount.movements);
+  labelBalance.textContent = `${balance}€`;
+
+  inputTransferAmount.value = '';
+  inputTransferTo.value = '';
+});
