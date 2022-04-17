@@ -99,8 +99,7 @@ const displaySums = function (movements, interestRate, balance) {
   labelSumInterest.textContent = `${interest}€`;
 };
 
-let currentAccount;
-let balance;
+let currentAccount, balance;
 
 // Event Handlers
 btnLogin.addEventListener('click', e => {
@@ -145,6 +144,8 @@ btnLogin.addEventListener('click', e => {
   displayMovements(currentAccount.movements);
 
   displaySums(currentAccount.movements, currentAccount.interestRate, balance);
+
+  logOutTimer();
 });
 
 btnTransfer.addEventListener('click', e => {
@@ -165,3 +166,30 @@ btnTransfer.addEventListener('click', e => {
   inputTransferAmount.value = '';
   inputTransferTo.value = '';
 });
+
+const logOutTimer = function () {
+  const everySecond = () => {
+    const min = String(Math.trunc(time / 60)).padStart(2, 0);
+    const sec = String(Math.trunc(time % 60)).padStart(2, 0);
+
+    // In each call, print the remaining time to the UI
+    labelTimer.textContent = `${min}:${sec}`;
+
+    // When 0 seconds, stop timer and log out user
+    if (time === 0) {
+      clearInterval(timer);
+      containerApp.style.opacity = 0;
+      labelWelcome.textContent = `Login to get started`;
+    }
+
+    // Decrease 1s
+    time--;
+  };
+  // Set Time to 5 minutes
+  let time = 300;
+
+  // Call the timer every second
+  everySecond();
+  const timer = setInterval(everySecond, 1000);
+  return timer;
+};
