@@ -193,3 +193,24 @@ const logOutTimer = function () {
   const timer = setInterval(everySecond, 1000);
   return timer;
 };
+
+// Sort button handler
+let sorted = false;
+const sort = function (movements) {
+  const movArray = [...movements];
+  const unSortedArray = movArray;
+  if (!sorted) {
+    const sortedArr = movArray.sort((a, b) => a > b);
+    sorted = true;
+    console.log(sorted);
+    return sortedArr;
+  } else {
+    sorted = false;
+    console.log(sorted);
+    return unSortedArray;
+  }
+};
+
+btnSort.addEventListener('click', e => {
+  displayMovements(sort(currentAccount.movements));
+});
