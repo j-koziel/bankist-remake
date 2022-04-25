@@ -211,6 +211,26 @@ const sort = function (movements) {
   }
 };
 
-btnSort.addEventListener('click', e => {
+btnSort.addEventListener('click', _ => {
   displayMovements(sort(currentAccount.movements));
+});
+
+// Closing account handler
+const closeAccount = function () {
+  const userName = inputCloseUsername.value;
+  const psswd = Number(inputClosePin.value);
+  console.log(userName, psswd);
+  accounts.forEach((acc, i) => {
+    if (userName === acc.username && psswd === acc.pin) {
+      accounts.splice(i, 1);
+      containerApp.style.opacity = 0;
+    } else {
+      return;
+    }
+  });
+};
+
+btnClose.addEventListener('click', e => {
+  e.preventDefault();
+  closeAccount();
 });
