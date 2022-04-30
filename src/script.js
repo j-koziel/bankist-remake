@@ -239,15 +239,6 @@ const loanHandler = function () {
   const deposits = currentAccount.movements.filter(mov => mov > 0);
   const loanReq = Number(inputLoanAmount.value);
   console.log(loanReq * 0.1);
-  // deposits.forEach(dep => {
-  //   if (dep < loanReq * 0.1) {
-  //     console.log('You are not elligible for this loan');
-  //     return;
-  //   } else {
-  //     currentAccount.movements.push(loanReq);
-  //     return;
-  //   }
-  // });
 
   for (dep of deposits) {
     if (dep < loanReq * 0.1) {
