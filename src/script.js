@@ -145,6 +145,13 @@ btnLogin.addEventListener('click', e => {
 
   displaySums(currentAccount.movements, currentAccount.interestRate, balance);
 
+  const day = new Date().getDate();
+  const month = new Date().getMonth();
+  const year = new Date().getFullYear();
+  labelDate.textContent = `${day}/${
+    month + 1 >= 10 ? month + 1 : `0${month + 1}`
+  }/${year}`;
+
   logOutTimer();
 });
 
